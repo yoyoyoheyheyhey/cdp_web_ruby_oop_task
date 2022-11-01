@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TEST</title>
+</head>
+<body>
+  <section>
+    <h2><%= @seller.name %>'s Wallet</h2>
+    <p>Balance:  <%= @seller.wallet.balance %></p>
+  </section>
+
+  <section>
+    <h2>Seller Items</h2>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>name</th>
+          <th>price</th>
+          <th>size</th>
+        </tr>
+
+        <% @seller_items.group_by{ |item| { name: item.name, price: item.price } }.each do |attr, items| %>
+          <tr>
+            <td><%= attr[:name] %></td>
+            <td><%= attr[:price] %></td>
+            <td><%= items.size %></td>
+
+            <td>
+              <form action="/add-to-cart" method="POST">
+                <input type="hidden" name="name" value="<%= attr[:name] %>">
+                <input type="submit" class="contact_btn submit_btn" value="カートに追加">
+              </form>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Cart</h2>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>name</th>
+          <th>price</th>
+          <th>size</th>
+        </tr>
+
+        <% @cart_items.group_by{ |item| { name: item.name, price: item.price } }.each do |attr, items| %>
+          <tr>
+            <td><%= attr[:name] %></td>
+            <td><%= attr[:price] %></td>
+            <td><%= items.size %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <p>Total amount: <%= @customer.cart.total_amount %></p>
+
+    <form action="/check-out" method="POST">
+      <input type="submit" name="check_out" value="Check out" />
+    </form>
+  </section>
+
+  <section>
+    <h2><%= @customer.name %>'s Wallet</h2>
+    <p>Balance:  <%= @customer.wallet.balance %></p>
+
+    <form action="/deposit" method="POST">
+      <input type="number" name="balance" value="0" min="1">
+      <input type="submit" class="contact_btn submit_btn" value="入金">
+    </form>
+  </section>
+
+  <section>
+    <h2>Your Items</h2>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>name</th>
+          <th>price</th>
+          <th>size</th>
+        </tr>
+
+        <% @customer_items.group_by{ |item| { name: item.name, price: item.price } }.each do |attr, items| %>
+          <tr>
+            <td><%= attr[:name] %></td>
+            <td><%= attr[:price] %></td>
+            <td><%= items.size %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+</body>
+</html>
